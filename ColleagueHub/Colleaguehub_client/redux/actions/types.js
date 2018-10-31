@@ -1,0 +1,17 @@
+export const SET_PROFILE_WITHDATA = 'SET_PROFILE_WITHDATA';
+export const LOGIN_WITH_FB = 'LOGIN_WITH_FB';
+export const DELETE_AUTH_USER = 'DELETE_AUTH_USER';
+export const GET_CURRENT_USER = 'GET_CURRENT_USER';
+export const GET_CURRENT_PROFILE = 'GET_CURRENT_PROFILE';
+export const GET_ALL_USERS = 'GET_ALL_USERS'
+export const GET_ERROR = 'GET_ERROR';
+//post
+export const GET_POSTS = 'GET_POSTS';
+export const ADD_POST = 'ADD_POST';
+export const DELETE_POST = 'DELETE_POST';
+//
+export const SET_LOADING = 'SET_LOADING';
+export const UPDATE_USER_PROFILE = 'UPDATE_USER_PROFILE';
+export const GET_SINGLE_USER = 'GET_SINGLE_USER';
+export const GET_SEARCHED_USER = 'GET_SEARCHED_USER';
+export const GET_ALL_COLLEGUES = 'GET_ALL_COLLEGUES';
