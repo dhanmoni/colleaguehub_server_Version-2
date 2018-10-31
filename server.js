@@ -28,10 +28,14 @@ app.get('/', (req, res)=> {
     res.json({msg:'It works'})
 })
 
+app.get('/hey', (req, res)=> {
+    res.json({msg:'It works hopefully'})
+})
+
 //use routes
 app.use('/auth', auth)
 
-const port = process.env.PORT || 80
+const port = process.env.PORT || 3001
 
 app.listen(port, ()=> {
     console.log(`Server started on port ${port}`)
