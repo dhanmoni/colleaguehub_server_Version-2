@@ -53,7 +53,7 @@ class StoryScreen extends Component {
   findUserLike(likes){
     if(likes && likes.length !==undefined){
      
-      if (likes.filter(like => like.user == this.props.auth.user.id).length >0) {
+      if (likes.filter(like => like.facebookId == this.props.auth.user.facebookId).length >0) {
         return true
       } else {
         return false
@@ -158,7 +158,7 @@ class StoryScreen extends Component {
           page:1
         },()=> {
 
-          this.props.getposts(this.state)
+          this.props.getposts(this.state, this.props.auth.userInfo)
          return (
            this.setState({
              refreshing:false

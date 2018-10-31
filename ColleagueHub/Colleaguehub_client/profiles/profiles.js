@@ -7,6 +7,7 @@ import {connect} from 'react-redux'
 import {getAllUsers, getSingleUser, getAllCollegues} from '../redux/actions/authAction'
 import Spinner from 'react-native-spinkit'
 import { withNavigation } from 'react-navigation';
+import {BannerView} from 'react-native-fbads'
 let HEIGHT_MIN = Dimensions.get('window').height;
 let WIDTH_MIN = Dimensions.get('window').width;
 const TEXTSIZE = Dimensions.get('window').width ;
@@ -22,7 +23,7 @@ class Profiles extends Component {
     super();
     this.state={
       token:'',
-      page:1,
+     
       refreshing:false
     }
   }
@@ -45,11 +46,11 @@ class Profiles extends Component {
  
  
 
-  _renderItem = (item)=> {
+  _renderItem = ({item, index})=> {
    
     return (
-     
-   
+     <View>
+   <View>
     <TouchableOpacity 
     activeOpacity={0.9}
                 
@@ -80,8 +81,9 @@ class Profiles extends Component {
                    
                     </Card> 
     </TouchableOpacity>
-   
-    
+    </View>
+  
+    </View>
    
    
   )}
@@ -104,7 +106,7 @@ class Profiles extends Component {
       handleRefresh = ()=> {
         this.setState({
           refreshing: true,
-          page:1
+         
         },()=> {
 
           this.props.getAllCollegues(this.state, this.props.auth.userInfo)

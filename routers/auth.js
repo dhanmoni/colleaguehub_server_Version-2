@@ -128,7 +128,7 @@ router.get('/currentProfile',
 
 router.post('/updateProfile',
      passport.authenticate('facebook-token'),
-      (req, res)=>{
+      (req, res, done)=>{
     
     Profile.findOne({ facebookId: req.user.facebookId })
         
@@ -152,6 +152,7 @@ router.post('/updateProfile',
                 ig_username:req.body.ig_username,
                 userdata: req.user
             })
+            
             console.log('User profile is updating!', user_data)
             Profile.findOneAndUpdate(
                 {facebookId: req.user.facebookId },
@@ -163,7 +164,7 @@ router.post('/updateProfile',
                
                 res.json(updatedprofile)
             })
-
+            
 
            }
         })
@@ -208,7 +209,9 @@ router.post('/createprofile',
                           ig_username:result.ig_username,
                           userdata: result.userdata,  
                     });
+                   
                   })
+                  
                   .catch(err => {
                     
                     res.status(500).json({
@@ -240,6 +243,7 @@ router.post('/createprofile',
                   
                     res.json(updatedprofile)
                 })
+                
             }
         })
         .catch(err=> res.status(401).json({message:'Something went wrong!'}))
@@ -332,8 +336,7 @@ router.delete('/user', passport.authenticate('facebook-token'), (req, res)=> {
 
 //post 
 router.get('/allposts',passport.authenticate('facebook-token'), (req, res)=> {
-    const perPage = 20
-    const page = req.query.page
+   
     Post.find({institution:req.query.institution})
         .sort({date:-1})
         .exec()
@@ -348,9 +351,10 @@ router.post('/addpost', passport.authenticate('facebook-token'), (req, res)=> {
         text: req.body.text,
         profileImage: req.user.profile,
         userdata: req.user,
+        institution:req.query.institution,
         facebookId:req.user.facebookId
     })
-    console.log('I am here')
+   
     console.log('newpost', newPost)
    newPost.save().then(docs=> res.status(200).json(docs)).catch(err=> res.status(401).json({
        message:'Something went wrong!'

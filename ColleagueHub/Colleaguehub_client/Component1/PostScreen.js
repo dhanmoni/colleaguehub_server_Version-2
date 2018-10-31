@@ -113,10 +113,10 @@ class PostScreen extends Component {
                  alert('Text field must not be empty!')
                  
                } else {
-                this.props.addpost(this.state)
+                this.props.addpost(this.state, userInfo)
                 this.props.navigation.navigate('StoryScreen')
                
-                setTimeout(()=> this.props.getposts(this.state, userInfo.institution), 2000)
+                setTimeout(()=> this.props.getposts(this.state, userInfo), 2000)
                 ToastAndroid.show('Posting...', ToastAndroid.LONG)
                }
               }

@@ -53,7 +53,7 @@ export const getAllUsers = (userData)=> dispatch=> {
 export const getAllCollegues = (userData, userinfo)=> dispatch=> {
     
     
-     axios.get(`http://192.168.43.76:3001/auth/allcollegues?access_token=${userData.token}&page=${userData.page}&institution=${userinfo.institution}`,
+     axios.get(`http://192.168.43.76:3001/auth/allcollegues?access_token=${userData.token}&institution=${userinfo.institution}`,
      userData)
      .then(res=> 
          dispatch({
@@ -154,9 +154,9 @@ export const deleteAuthUser = (userData)=> dispatch=> {
 }
 
 //post
-export const getposts = (userdata)=>dispatch=> {
+export const getposts = (userdata, userinfo)=>dispatch=> {
   
-    axios.get(`http://192.168.43.76:3001/auth/allposts?access_token=${userdata.token}`)
+    axios.get(`http://192.168.43.76:3001/auth/allposts?access_token=${userdata.token}&institution=${userinfo.institution}`)
     .then(res=> {
         dispatch({
             type: GET_POSTS,
@@ -165,9 +165,9 @@ export const getposts = (userdata)=>dispatch=> {
     }).catch(err=> res.status(404).json({message:'Not found'}))
 }
 
-export const addpost = (userdata)=>dispatch=> {
+export const addpost = (userdata, userinfo)=>dispatch=> {
     
-    axios.post(`http://192.168.43.76:3001/auth/addpost?access_token=${userdata.token}`, userdata)
+    axios.post(`http://192.168.43.76:3001/auth/addpost?access_token=${userdata.token}&institution=${userinfo.institution}`, userdata)
     .then(res=> {
         
         dispatch({

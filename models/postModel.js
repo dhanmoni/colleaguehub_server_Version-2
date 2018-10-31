@@ -11,7 +11,7 @@ const PostSchema = new Schema({
         required: true
     },
     institution:{
-        type: String,
+        type: String
        
     },
     name:{
