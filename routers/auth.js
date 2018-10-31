@@ -30,10 +30,7 @@ passport.use(new FacebookTokenStrategy({
     clientID: facebookClientId,
     clientSecret: facebookClientSecret
   }, function(accessToken, refreshToken, profile, done) {
-    // User.find({facebookId: profile.id}, function (error, user) {
-    //     return done(null, user);
-    //   });
-  
+   console.log(profile)
     User.findOne({facebookId: profile.id}).exec()
             .then(()=> {
                 const user= ({
@@ -53,7 +50,7 @@ passport.use(new FacebookTokenStrategy({
 router.post('/fblogin',
   passport.authenticate('facebook-token'),
    (req, res, done)=> {
-       //console.log(req.user)
+       console.log(req.user)
     User.findOne({facebookId: req.user.facebookId}).exec()
             .then(users=> {
                 if(!users){
@@ -259,6 +256,15 @@ router.post('/createprofile',
 
 
 router.get('/allusers',passport.authenticate('facebook-token'), (req, res)=> {
+    Profile.find()
+        .sort({date:-1})
+        .exec()
+        .then(user=>res.status(200).json(user))
+        .catch(err=> {
+            res.status(404).json({message:'Something went wrong!'}) })
+})
+
+router.get('/alluser', (req, res)=> {
     Profile.find()
         .sort({date:-1})
         .exec()

@@ -31,8 +31,8 @@ app.get('/', (req, res)=> {
 //use routes
 app.use('/auth', auth)
 
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 80
 
 app.listen(port, ()=> {
-    console.log(`Server started on post ${port}`)
+    console.log(`Server started on port ${port}`)
 })
