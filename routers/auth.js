@@ -106,6 +106,10 @@ router.get('/currentUser',
         .catch(err => res.status(404).json({message:'Unauthorized'}))
 })
 
+router.get('/test', (req, res)=> {
+    res.json({message:'Test'})
+})
+
 router.get('/currentProfile',
      passport.authenticate('facebook-token'),
       (req, res)=>{

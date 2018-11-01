@@ -31,6 +31,9 @@ app.get('/', (req, res)=> {
 app.get('/hey', (req, res)=> {
     res.json({msg:'It works hopefully'})
 })
+app.get('/testinapp', (req, res)=> {
+    res.json({message:'TestInApp'})
+})
 
 //use routes
 app.use('/auth', auth)
