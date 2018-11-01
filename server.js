@@ -36,7 +36,7 @@ app.get('/testinapp', (req, res)=> {
 })
 
 //use routes
-app.use('/auth', auth)
+app.use('/api/auth', auth)
 
 const port = process.env.PORT || 3001
 
