@@ -264,14 +264,7 @@ router.get('/allusers',passport.authenticate('facebook-token'), (req, res)=> {
             res.status(404).json({message:'Something went wrong!'}) })
 })
 
-router.get('/alluser', (req, res)=> {
-    Profile.find()
-        .sort({date:-1})
-        .exec()
-        .then(user=>res.status(200).json(user))
-        .catch(err=> {
-            res.status(404).json({message:'Something went wrong!'}) })
-})
+
 
 router.get('/allcollegues',passport.authenticate('facebook-token'), (req, res)=> {
    
