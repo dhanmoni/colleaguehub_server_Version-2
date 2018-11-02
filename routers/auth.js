@@ -25,6 +25,9 @@ passport.deserializeUser(function(id, done) {
     })
 });
 
+router.get('/testing', (req, res)=> {
+    res.json({message:'Success'})
+})
 
 passport.use(new FacebookTokenStrategy({
     clientID: facebookClientId,
