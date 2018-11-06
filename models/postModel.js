@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ttl = require('mongoose-ttl')
 
 const PostSchema = new Schema({
     userdata:{
@@ -41,7 +42,7 @@ const PostSchema = new Schema({
     },
 
    
-}, {timestamps: true})
-PostSchema.index({createdAt: 1},{expireAfterSeconds: 86400});
+})
 
+schema.plugin(ttl, { ttl: 120000 });
 module.exports= mongoose.model('post', PostSchema);

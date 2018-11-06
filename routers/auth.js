@@ -373,7 +373,7 @@ router.post('/like/:id', passport.authenticate('facebook-token'),
   
             Post.findById(req.params.id)
                 .then(post =>{
-                    console.log('post is ' ,post)
+                   
                     if(post.likes.filter(like=> like.facebookId.toString() === req.user.facebookId)
                         .length > 0)
                     {
