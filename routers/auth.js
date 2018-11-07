@@ -146,7 +146,7 @@ router.post('/updateProfile',
            
             const user_data = ({
                     
-                institution: req.body.institution.toLowerCase(),
+                institution: req.body.institution,
                 status: req.body.status,
                 residence: req.body.residence,
                 bio: req.body.bio,
@@ -189,7 +189,7 @@ router.post('/createprofile',
             if(!profile || profile.length ===0){
                 const profile = new Profile({
                     _id: new mongoose.Types.ObjectId(),
-                    institution: req.body.institution.toLowerCase(),
+                    institution: req.body.institution,
                     status: req.body.status,
                     residence: req.body.residence,
                     bio: req.body.bio,
@@ -226,7 +226,7 @@ router.post('/createprofile',
             } else {
                 const user_data = ({
                     
-                    institution: req.body.institution.toLowerCase(),
+                    institution: req.body.institution,
                     status: req.body.status,
                     residence: req.body.residence,
                     bio: req.body.bio,
