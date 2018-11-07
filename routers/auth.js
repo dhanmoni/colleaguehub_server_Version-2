@@ -343,7 +343,7 @@ router.delete('/user', passport.authenticate('facebook-token'), (req, res)=> {
 //post 
 router.get('/allposts',passport.authenticate('facebook-token'), (req, res)=> {
    
-    Post.find({institution:req.query.institution.toLowerCase()})
+    Post.find({institution:req.query.institution})
         .sort({date:-1})
         .exec()
         .then(posts=>res.status(200).json(posts))
