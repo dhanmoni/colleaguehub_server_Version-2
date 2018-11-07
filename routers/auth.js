@@ -275,7 +275,7 @@ router.get('/allusers',passport.authenticate('facebook-token'), (req, res)=> {
 
 router.get('/allcollegues',passport.authenticate('facebook-token'), (req, res)=> {
    
-    Profile.find({institution: req.query.institution.toLowerCase()})
+    Profile.find({institution: req.query.institution})
    
         .sort({date:-1})
        
@@ -357,7 +357,7 @@ router.post('/addpost', passport.authenticate('facebook-token'), (req, res)=> {
         text: req.body.text,
         profileImage: req.user.profile,
         userdata: req.user,
-        institution:req.query.institution.toLowerCase(),
+        institution:req.query.institution,
         facebookId:req.user.facebookId
     })
    
