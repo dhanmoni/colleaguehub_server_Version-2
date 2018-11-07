@@ -146,7 +146,7 @@ router.post('/updateProfile',
            
             const user_data = ({
                     
-                institution: req.body.institution,
+                institution: req.body.institution.toLowerCase(),
                 status: req.body.status,
                 residence: req.body.residence,
                 bio: req.body.bio,
@@ -189,7 +189,7 @@ router.post('/createprofile',
             if(!profile || profile.length ===0){
                 const profile = new Profile({
                     _id: new mongoose.Types.ObjectId(),
-                    institution: req.body.institution,
+                    institution: req.body.institution.toLowerCase(),
                     status: req.body.status,
                     residence: req.body.residence,
                     bio: req.body.bio,
@@ -202,7 +202,7 @@ router.post('/createprofile',
                   profile.save().then(result => {
                     
                     res.status(201).json({
-                          institution: result.institution,
+                          institution: result.institution.toLowerCase(),
                           status: result.status,
                           _id: result._id,
                           residence: result.residence,
@@ -226,7 +226,7 @@ router.post('/createprofile',
             } else {
                 const user_data = ({
                     
-                    institution: req.body.institution,
+                    institution: req.body.institution.toLowerCase(),
                     status: req.body.status,
                     residence: req.body.residence,
                     bio: req.body.bio,
@@ -275,7 +275,7 @@ router.get('/allusers',passport.authenticate('facebook-token'), (req, res)=> {
 
 router.get('/allcollegues',passport.authenticate('facebook-token'), (req, res)=> {
    
-    Profile.find({institution: req.query.institution})
+    Profile.find({institution: req.query.institution.toLowerCase()})
    
         .sort({date:-1})
        
@@ -343,7 +343,7 @@ router.delete('/user', passport.authenticate('facebook-token'), (req, res)=> {
 //post 
 router.get('/allposts',passport.authenticate('facebook-token'), (req, res)=> {
    
-    Post.find({institution:req.query.institution})
+    Post.find({institution:req.query.institution.toLowerCase()})
         .sort({date:-1})
         .exec()
         .then(posts=>res.status(200).json(posts))
@@ -357,7 +357,7 @@ router.post('/addpost', passport.authenticate('facebook-token'), (req, res)=> {
         text: req.body.text,
         profileImage: req.user.profile,
         userdata: req.user,
-        institution:req.query.institution,
+        institution:req.query.institution.toLowerCase(),
         facebookId:req.user.facebookId
     })
    
