@@ -202,7 +202,7 @@ router.post('/createprofile',
                   profile.save().then(result => {
                     
                     res.status(201).json({
-                          institution: result.institution.toLowerCase(),
+                          institution: result.institution,
                           status: result.status,
                           _id: result._id,
                           residence: result.residence,
