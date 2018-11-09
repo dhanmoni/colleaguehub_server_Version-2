@@ -164,7 +164,11 @@ router.post('/updateProfile',
                   user_data
                 },
                 {new: true}
-            ).then(updatedprofile=> {
+            )
+            .then(()=> {
+                Post.findOneAndDelete({facebookId:req.user.facebookId})
+            })
+            .then(updatedprofile=> {
                
                 res.json(updatedprofile)
             })
