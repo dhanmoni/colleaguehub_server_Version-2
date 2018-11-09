@@ -333,9 +333,10 @@ router.delete('/user', passport.authenticate('facebook-token'), (req, res)=> {
         Profile.findOneAndDelete({ facebookId: req.user.facebookId })
         .then(()=> {
             Post.findOneAndDelete({facebookId:req.user.facebookId})
+            .then(
+                ()=> res.json({ success: 'true' }))
         })
-        .then(
-            ()=> res.json({ success: 'true' }))
+        
     }).catch(err=> res.status(500).json({message: 'Something went wrong!'}))
 })
 
