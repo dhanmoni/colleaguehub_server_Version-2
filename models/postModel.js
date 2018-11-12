@@ -44,5 +44,5 @@ const PostSchema = new Schema({
    
 })
 
-PostSchema.plugin(ttl, { ttl: 120000 });
+PostSchema.plugin(ttl, { ttl: 86400000 });
 module.exports= mongoose.model('post', PostSchema);
