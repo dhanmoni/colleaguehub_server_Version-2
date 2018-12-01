@@ -262,7 +262,7 @@ router.post('/createprofile',
 
 
 
-router.get('/allusers',passport.authenticate('facebook-token'), (req, res)=> {
+router.get('/allusers', (req, res)=> {
     Profile.find()
         .sort({date:-1})
         .exec()
