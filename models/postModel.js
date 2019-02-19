@@ -16,32 +16,25 @@ const PostSchema = new Schema({
     {   
        type: String
      },
-    institution:{
-        type: String
-       
-    },
+    institution: [],
     name:{
         type: String
     },
     profileImage:{
         type: String
     },
-    facebookId:{
-        type: String
-    },
+   
     likes:[
         {
-            user:{
+            userdata:{
                 type: Schema.Types.ObjectId,
                 ref: 'user'
             },
-            facebookId:{
-                type:String
-            },
+           
             name:{
                 type: String
             },
-            avatar:{
+            profileImage:{
                 type: String
             },
             date:{
@@ -52,7 +45,7 @@ const PostSchema = new Schema({
     ],
     comments:[
         {
-            user:{
+            userdata:{
                 type: Schema.Types.ObjectId,
                 ref: 'users'
             },
@@ -63,35 +56,57 @@ const PostSchema = new Schema({
             name:{
                 type: String
             },
-            avatar:{
+            profileImage:{
                 type: String
             },
-            facebookId:{
-                type:String
-            },
+           
             date:{
                 type: Date,
                 default: Date.now
             },
             likes: [
-               { user:{
+               { userdata:{
                     type: Schema.Types.ObjectId,
                     ref: 'user'
                 },
-                facebookId:{
-                    type:String
-                },
+               
                 name:{
                     type: String
                 },
-                avatar:{
+                profileImage:{
                     type: String
                 },
                 date:{
                     type: Date,
                     default: Date.now
                 }}
-            ]
+            ],
+            comments:[
+                {
+                    userdata:{
+                        type: Schema.Types.ObjectId,
+                        ref: 'users'
+                    },
+                    text:{
+                        type: String,
+                        required: true
+                    },
+                    name:{
+                        type: String
+                    },
+                    profileImage:{
+                        type: String
+                    },
+                   
+                    date:{
+                        type: Date,
+                        default: Date.now
+                    },
+                   
+                       
+                   
+                }
+            ],
                
            
         }

@@ -4,6 +4,9 @@ const app = express();
 const bodyParser= require('body-parser')
 //import routes
 const auth = require('./routers/auth')
+const post = require('./routers/post')
+const profile = require('./routers/profile')
+
 const passport = require('passport')
 
 
@@ -16,6 +19,10 @@ app.use(bodyParser.json({limit: '50mb'}))
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('uploads'));
+
+//passport config
+require('./middleware/check-auth')(passport)
+
 
 //DB config
 const db = require('./config/keys').MongoURI;
@@ -42,8 +49,9 @@ app.get('/testinapp', (req, res)=> {
 })
 
 
-app.use('/api', auth)
-
+app.use('/api/auth', auth)
+app.use('/api/post', post)
+app.use('/api/profile', profile)
 
 //use routes
 //app.use('/api/auth', auth)

@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
+    
     name: {
         type: String,
         
@@ -11,19 +11,23 @@ const userSchema = mongoose.Schema({
     first_name:{
         type: String
     },
-    facebookId:{
-        type:String
+    email:{
+        type: String,
+       
     },
-    profile:{
-        type:String
+    password:{
+        type: String,
+      
     },
-    token:{
+   
+    profileImage: {
         type: String
     },
     date:{
         type: Date,
         default: Date.now
-    }
+    },
+   
    
 });
 
