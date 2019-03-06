@@ -4,8 +4,6 @@ const router = express.Router();
  const Profile = require('../models/profileModel')
  const Group = require('../models/groupModel')
 
-
- const checkAuth = require('../middleware/check-auth');
  const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const passport = require('passport')
@@ -70,7 +68,7 @@ const deleteFile = (file) => {
 
 
 router.get('/currentProfile',
-checkAuth,
+ passport.authenticate('jwt', {session: false}),
       (req, res)=>{
     
     Profile.findOne({ userdata: req.user.id })
@@ -89,29 +87,17 @@ checkAuth,
 
 
 
-passport.serializeUser(function(user, done) {
-    console.log('serializeUser: ' + user._id)
-    done(null, user._id);
-});
-
-passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user){
-       
-        if(!err) done(null, user);
-        else done(err, null)  
-    })
-});
 
 
 
 
-
-router.post('/createProfile', checkAuth, (req, res)=> {
+router.post('/createProfile',  passport.authenticate('jwt', {session: false}), (req, res)=> {
 
 
     const profileFields = {};
     profileFields.userdata = req.user.id;
     profileFields.name = req.user.name;
+    profileFields.pro = false;
     if(req.body.residence) profileFields.residence = req.body.residence;
 
     profileFields.social = {}
@@ -150,7 +136,7 @@ router.post('/createProfile', checkAuth, (req, res)=> {
 
 
 
-router.post('/updateProfile/institution/public', checkAuth, (req, res)=>{
+router.post('/updateProfile/institution/public',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
 
     // const {errors, isValid } = validateProfile(req.body)
@@ -214,7 +200,7 @@ router.post('/updateProfile/institution/public', checkAuth, (req, res)=>{
 })
 
 
-router.post('/createProfile/institution/public', checkAuth, (req, res)=>{
+router.post('/createProfile/institution/public',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
 
     // const {errors, isValid } = validateProfile(req.body)
@@ -279,10 +265,10 @@ router.post('/createProfile/institution/public', checkAuth, (req, res)=>{
 
 
 
-router.post('/createProfile/updateActiveGroup', checkAuth, (req, res)=> {
-    console.log(req.body.myActiveGroups)
+router.post('/createProfile/updateActiveGroup',  passport.authenticate('jwt', {session: false}), (req, res)=> {
+    console.log('ins =',req.body.myActiveGroups)
     const institutions = JSON.parse(req.body.myActiveGroups)
-    console.log(institutions)
+    console.log('ins2 =',institutions)
     
     Profile.findOne({userdata:req.user.id})
         .then(profile=> {
@@ -305,7 +291,7 @@ router.post('/createProfile/updateActiveGroup', checkAuth, (req, res)=> {
 })
    
 
-router.post('/createProfile/institution/private', checkAuth, (req, res)=>{
+router.post('/createProfile/institution/private',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
     // const {errors, isValid } = validateProfile(req.body)
     // if(!isValid){
@@ -360,7 +346,7 @@ router.post('/createProfile/institution/private', checkAuth, (req, res)=>{
         })
 })
 
-router.post('/createProfile/skills', checkAuth, (req, res)=>{
+router.post('/createProfile/skills',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
     
     Profile.findOne({ userdata: req.user.id })
@@ -376,7 +362,7 @@ router.post('/createProfile/skills', checkAuth, (req, res)=>{
         })
 })
 
-router.delete('/createProfile/skills/:id', checkAuth, (req, res)=> {
+router.delete('/createProfile/skills/:id',  passport.authenticate('jwt', {session: false}), (req, res)=> {
     Profile.findOne({userdata: req.user.id})
                
     .then(profile =>{
@@ -398,7 +384,7 @@ router.delete('/createProfile/skills/:id', checkAuth, (req, res)=> {
     .catch((err)=> res.status(404).json(err))
 })
 
-router.post('/createProfile/bio', checkAuth, (req, res)=>{
+router.post('/createProfile/bio',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
     
     Profile.findOne({ userdata: req.user.id })
@@ -420,7 +406,7 @@ router.post('/createProfile/bio', checkAuth, (req, res)=>{
 })
 
 //update name
-router.post('/updateProfile/name', checkAuth, (req, res)=>{
+router.post('/updateProfile/name',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
     
     User.findOne({ _id: req.user.id })
@@ -438,7 +424,7 @@ router.post('/updateProfile/name', checkAuth, (req, res)=>{
         })
 })
 //in profile
-router.post('/updateProfile/name2', checkAuth, (req, res)=>{
+router.post('/updateProfile/name2',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
     
     Profile.findOne({ userdata: req.user.id })
@@ -457,7 +443,7 @@ router.post('/updateProfile/name2', checkAuth, (req, res)=>{
 })
 
 //update residence
-router.post('/updateProfile/residence', checkAuth, (req, res)=>{
+router.post('/updateProfile/residence',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
     
     Profile.findOne({ userdata: req.user.id })
@@ -476,7 +462,7 @@ router.post('/updateProfile/residence', checkAuth, (req, res)=>{
 })
 
 //update social links
-router.post('/updateProfile/social', checkAuth, (req, res)=>{
+router.post('/updateProfile/social',  passport.authenticate('jwt', {session: false}), (req, res)=>{
 
     
     profileFields = {}
@@ -501,7 +487,7 @@ router.post('/updateProfile/social', checkAuth, (req, res)=>{
         })
 })
 
-router.delete('/institution/:id', checkAuth,
+router.delete('/institution/:id',  passport.authenticate('jwt', {session: false}),
         (req, res)=>{
            Profile.findOne({userdata: req.user.id})
                
@@ -528,7 +514,7 @@ router.delete('/institution/:id', checkAuth,
 
 
 //report user
-router.post('/report/:id/:ins_id', checkAuth, (req, res)=> {
+router.post('/report/:id/:ins_id',  passport.authenticate('jwt', {session: false}), (req, res)=> {
     User.findOne({_id: req.params.id})
                 .then(user =>{
                    console.log('user is ', user)
@@ -561,7 +547,7 @@ router.post('/report/:id/:ins_id', checkAuth, (req, res)=> {
 
 
 // remove report from user
-router.post('/unreport/:id/:ins_id', checkAuth, (req, res)=> {
+router.post('/unreport/:id/:ins_id',  passport.authenticate('jwt', {session: false}), (req, res)=> {
     User.findOne({_id: req.params.id})
                 .then(user =>{
                    console.log('user is ', user)
@@ -592,7 +578,7 @@ router.post('/unreport/:id/:ins_id', checkAuth, (req, res)=> {
 
 
 //block user 
-router.post('/block/:id', checkAuth, (req, res)=> {
+router.post('/block/:id',  passport.authenticate('jwt', {session: false}), (req, res)=> {
         User.findOne({_id: req.params.id}).then(
             user=> {
                
@@ -628,7 +614,7 @@ router.post('/block/:id', checkAuth, (req, res)=> {
 
 
 //unblock user 
-router.post('/unblock/:id', checkAuth, (req, res)=> {
+router.post('/unblock/:id',  passport.authenticate('jwt', {session: false}), (req, res)=> {
     User.findOne({_id: req.params.id}).then(
         user=> {
            
@@ -657,7 +643,7 @@ router.post('/unblock/:id', checkAuth, (req, res)=> {
 //update profile image in user
 router.post('/updateProfileImage',
 upload.single('profileImage'),
-checkAuth,
+ passport.authenticate('jwt', {session: false}),
   async (req, res, done)=> {
     const result = await cloudinary.uploader.upload(req.file.path)  
     console.log(result) 
@@ -696,7 +682,7 @@ checkAuth,
 
 //update profile image in userinfo
 router.post('/updateProfileImage2',
-checkAuth,
+ passport.authenticate('jwt', {session: false}),
 upload.single('profileImage'),
   
   async (req, res, done)=> {
@@ -766,7 +752,7 @@ router.get('/allgroups', (req, res)=> {
 
 
 
-router.get('/allcolleagues',checkAuth,(req, res)=> {
+router.get('/allcolleagues', passport.authenticate('jwt', {session: false}),(req, res)=> {
    
     console.log('getting colleagues...')
 const institutions = JSON.parse(req.query.institution)
@@ -783,7 +769,7 @@ const institutions = JSON.parse(req.query.institution)
 
 
 //follow
-router.post('/star/:id', checkAuth,
+router.post('/star/:id',  passport.authenticate('jwt', {session: false}),
  (req, res)=>{
      console.log(req.params.id)
    
@@ -824,7 +810,7 @@ router.post('/star/:id', checkAuth,
       
         })
 
-router.post('/star2/:id', checkAuth,
+router.post('/star2/:id',  passport.authenticate('jwt', {session: false}),
 (req, res)=>{
     
     Profile.findOne({userdata: req.params.id})
@@ -866,7 +852,7 @@ router.post('/star2/:id', checkAuth,
         })
 
 //unfollow
-router.post('/unstar/:id', checkAuth,
+router.post('/unstar/:id',  passport.authenticate('jwt', {session: false}),
         (req, res)=>{
            
                 Profile.findOne({userdata: req.params.id})
@@ -887,7 +873,7 @@ router.post('/unstar/:id', checkAuth,
        
        })
 //unfollow
-router.post('/unstar2/:id', checkAuth,
+router.post('/unstar2/:id',  passport.authenticate('jwt', {session: false}),
         (req, res)=>{
            
                 Profile.findOne({userdata: req.params.id})
@@ -914,7 +900,7 @@ router.post('/unstar2/:id', checkAuth,
        
        })
 
-router.post('/unfollow/:id', checkAuth,
+router.post('/unfollow/:id',  passport.authenticate('jwt', {session: false}),
 (req, res)=>{
     
     Profile.findOne({userdata:req.user.id}).then(myProfile=> {
@@ -934,7 +920,7 @@ router.post('/unfollow/:id', checkAuth,
 })
 
 //Search by name
-router.get('/allusers',checkAuth, (req, res)=> {
+router.get('/allusers', passport.authenticate('jwt', {session: false}), (req, res)=> {
 
     let name = req.query.name;
    
@@ -951,7 +937,7 @@ router.get('/allusers',checkAuth, (req, res)=> {
 })
 
 
-router.get('/allusers/:userId',checkAuth, (req, res)=> {
+router.get('/allusers/:userId', passport.authenticate('jwt', {session: false}), (req, res)=> {
     console.log(req.params.userId)
     Profile.findOne({userdata: req.params.userId})
        

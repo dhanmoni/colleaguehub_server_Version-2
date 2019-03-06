@@ -4,7 +4,6 @@ const router = express.Router();
  const Profile = require('../models/profileModel')
  const Post = require('../models/postModel')
 
- const checkAuth = require('../middleware/check-auth');
  const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const passport = require('passport')
@@ -66,26 +65,13 @@ const deleteFile = (file) => {
         }})
 }
 
-passport.serializeUser(function(user, done) {
-    console.log('serializeUser: ' + user._id)
-    done(null, user._id);
-});
-
-passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user){
-       
-        if(!err) done(null, user);
-        else done(err, null)  
-    })
-});
-
 //post 
-router.get('/allposts',checkAuth, (req, res)=> {
+router.get('/allposts', passport.authenticate('jwt', {session: false}), (req, res)=> {
     console.log(req.user.id)
     console.log('getting posts...')
     console.log(req.query.institution)
      const institutions = JSON.parse(req.query.institution)
-    console.log(institutions)
+    //console.log(institutions)
      Post.find({institution: { $in: institutions }})
          .sort({date:-1})
          .exec()
@@ -97,7 +83,7 @@ router.get('/allposts',checkAuth, (req, res)=> {
              res.status(404).json({message:'Something went wrong!'}) })
  })
 
-router.get('/allposts/:postId',checkAuth, (req, res)=> {
+router.get('/allposts/:postId', passport.authenticate('jwt', {session: false}), (req, res)=> {
   
     Post.findById(req.params.postId)
         .then(post=>res.status(200).json(post))
@@ -107,7 +93,7 @@ router.get('/allposts/:postId',checkAuth, (req, res)=> {
 
 
 router.post('/addpostwithImage',upload.single('postImage'),
-             checkAuth, 
+              passport.authenticate('jwt', {session: false}), 
            async  (req, res)=> {
             const institutions = JSON.parse(req.query.institution)
 
@@ -115,10 +101,10 @@ router.post('/addpostwithImage',upload.single('postImage'),
               const result = await cloudinary.uploader.upload(req.file.path)  
               console.log(result)        
                  const newPost = new Post({
-                name: req.body.name,
+                name: req.user.name,
                 text: req.body.text,
                 postImage: result.secure_url,
-               profileImage: req.body.profileImage,
+               profileImage: req.user.profileImage,
                 userdata: req.user.id,
                 institution:institutions,
                
@@ -141,16 +127,16 @@ router.post('/addpostwithImage',upload.single('postImage'),
 })
 
 
-router.post('/addpost', checkAuth, (req, res)=> {
+router.post('/addpost',  passport.authenticate('jwt', {session: false}), (req, res)=> {
     
     console.log('req.user is',req.user)
     console.log(req.query.institution)
     const institutions = JSON.parse(req.query.institution)
    // console.log( typeof institutions)
      const newPost = new Post({
-         name: req.body.name,
+         name: req.user.name,
          text: req.body.text,
-         profileImage:req.body.profileImage,
+         profileImage:req.user.profileImage,
          userdata: req.user.id,
          institution:institutions
      })
@@ -162,7 +148,7 @@ router.post('/addpost', checkAuth, (req, res)=> {
  })
 
 
-router.post('/like/:id', checkAuth,
+router.post('/like/:id',  passport.authenticate('jwt', {session: false}),
  (req, res)=>{
    
             Post.findById(req.params.id)
@@ -191,7 +177,7 @@ router.post('/like/:id', checkAuth,
         })
 
 
-router.post('/unlike/:id', checkAuth,
+router.post('/unlike/:id',  passport.authenticate('jwt', {session: false}),
         (req, res)=>{
           
                    Post.findById(req.params.id)
@@ -217,7 +203,7 @@ router.post('/unlike/:id', checkAuth,
 
  
 
-router.post('/comment/:id', checkAuth,
+router.post('/comment/:id',  passport.authenticate('jwt', {session: false}),
         (req, res)=>{
        
            Post.findById(req.params.id).then(post =>{
@@ -240,7 +226,7 @@ router.post('/comment/:id', checkAuth,
 
 
 
-router.post('/comment/:id/like/:comment_id', checkAuth,
+router.post('/comment/:id/like/:comment_id',  passport.authenticate('jwt', {session: false}),
        (req, res)=>{
       
         Post.findById(req.params.id)
@@ -283,7 +269,7 @@ router.post('/comment/:id/like/:comment_id', checkAuth,
 
 
 //add reply to comment
-router.post('/comment/:id/reply/:comment_id', checkAuth,
+router.post('/comment/:id/reply/:comment_id',  passport.authenticate('jwt', {session: false}),
       (req, res)=>{
      
        Post.findById(req.params.id)
@@ -325,7 +311,7 @@ router.post('/comment/:id/reply/:comment_id', checkAuth,
      
      }) 
 
-router.delete('/comment/:id/:comment_id',  checkAuth,
+router.delete('/comment/:id/:comment_id',   passport.authenticate('jwt', {session: false}),
        (req, res)=> {
         Post.findById(req.params.id).then(post =>{
             console.log('deleting...', req.params.id)
@@ -349,7 +335,7 @@ router.delete('/comment/:id/:comment_id',  checkAuth,
 )
 
 
-router.delete('/deletepost/:id', checkAuth, (req, res)=> {
+router.delete('/deletepost/:id',  passport.authenticate('jwt', {session: false}), (req, res)=> {
     Post.findOne({userdata: req.user.id})
     .then(profile =>{
         console.log('deleting..', req.params.id)

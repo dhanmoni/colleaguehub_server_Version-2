@@ -17,12 +17,12 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json({limit: '50mb'}))
 
 app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static('uploads'));
 
 //passport config
 require('./middleware/check-auth')(passport)
 
+
+app.use(express.static('uploads'));
 
 //DB config
 const db = require('./config/keys').MongoURI;

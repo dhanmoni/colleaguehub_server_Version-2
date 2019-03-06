@@ -9,7 +9,7 @@ module.exports = function validateProfile(data){
 
 
     if(validator.isEmpty(data.institution)){
-        errors.institution = 'Minimum one institution/group name is required!'
+        errors.institution = 'Minimum 1 institution/group name is required!'
     }
     // if(validator.isEmpty(data.status)){
     //     errors.status = 'Status is required'

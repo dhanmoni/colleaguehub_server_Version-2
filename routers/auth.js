@@ -4,7 +4,6 @@ const router = express.Router();
  const Profile = require('../models/profileModel')
  const Post = require('../models/postModel')
 
- const checkAuth = require('../middleware/check-auth');
  const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const passport = require('passport')
@@ -18,54 +17,6 @@ const validateRegister = require('../validation/registerError')
 const validateLogin = require('../validation/LoginError')
 
 
-
-const cloudinary = require('cloudinary')
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
-})
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb)=> {
-        cb(null,'./uploads/');
-    }, filename:(req, file, cb)=> {
-        console.log(file)
-          const now = new Date().toISOString();
-          const date = now.replace(/:/g, '-'); 
-          cb(null, date + file.originalname)
-    }
-}
-)
-
-const upload = multer({ 
-        storage: storage ,
-        //dest:'uploads/',
-        fileFilter: (req, file, cb)=> {
-            console.log(file)
-            if(file.mimetype == 'image/jpg' || file.mimetype == 'image/png' || file.mimetype == 'image/jpeg'){
-                cb(null, true)
-               
-            } else {
-                cb(new Error('file not supported'), false)
-            }
-        },  
-        
-})
-//const upload = multer({dest: 'uploads/'})
-
-const deleteFile = (file) => {
-    fs.unlink('./uploads/'+ file, function(err) {
-        if(err && err.code == 'ENOENT') {
-            // file doens't exist
-            console.info("File doesn't exist, won't remove it.");
-        } else if (err) {
-            // other errors, e.g. maybe we don't have enough permission
-            console.error("Error occurred while trying to remove file");
-        } else {
-            console.info(`removed`);
-        }})
-}
 
 
 router.get('/testing', (req, res)=> {
@@ -156,18 +107,6 @@ router.get('/testing', (req, res)=> {
 //         })
 //         .catch(err => res.status(404).json({message:'Unauthorized'}))
 // })
-passport.serializeUser(function(user, done) {
-  console.log('serializeUser: ' + user._id)
-  done(null, user._id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user){
-     
-      if(!err) done(null, user);
-      else done(err, null)  
-  })
-});
 
 router.get('/test', (req, res)=> {
     res.json({message:'Test'})
@@ -205,7 +144,7 @@ router.post("/signup", async(req, res, next) => {
                 name: req.body.name,
                 profileImage:'',
                 first_name : req.body.name.split(" ")[0],
-               
+              
               });
               user
                 .save()
@@ -216,9 +155,9 @@ router.post("/signup", async(req, res, next) => {
                         email: result.email,
                         id: result._id,
                         name: result.name,
-                       profileImage:'',
                         first_name: result.first_name,
-                       
+                       profileImage:result.profileImage,
+                    
 
                     }
                     console.log('payload is',payload)
@@ -273,11 +212,13 @@ router.post("/signup", async(req, res, next) => {
                 if (isMatched) {
                     
                   const payload = {
-                     profileImage:user[0].profileImage,
+                    
                       email: user[0].email,
                       id: user[0].id,
+                      profileImage:user[0].profileImage,
                         name: user[0].name,
                         first_name: user[0].first_name,
+                        
                   }
                   console.log('payload is ',payload)
                   //sign token
@@ -313,24 +254,22 @@ router.post("/signup", async(req, res, next) => {
       });
   });
   
-  router.get('/current',
-  checkAuth,
+router.get('/current',
+  passport.authenticate('jwt', {session: false}),
      (req, res)=>{
-         console.log(req.query.access_token)
+         console.log(req.user)
          res.json({
-            
-            
              id: req.user.id,
              name: req.user.name,
              email: req.user.email
-           
+          
          })
      }
 )
 
 
 
-router.delete('/user',checkAuth, (req, res)=> {
+router.delete('/user' , passport.authenticate('jwt', {session: false}), (req, res)=> {
     User.findOneAndDelete({_id: req.user.id})
     .then(()=>{
        
