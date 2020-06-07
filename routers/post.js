@@ -141,10 +141,40 @@ router.post('/addpost',  passport.authenticate('jwt', {session: false}), (req, r
          institution:institutions
      })
     
-     console.log('newpost', newPost)
-    newPost.save().then(docs=> res.status(200).json(docs)).catch(err=> res.status(401).json({
+    // console.log('newpost', newPost)
+     let idOfPost;
+    newPost.save().then(docs=>{ 
+        console.log(docs)
+        idOfPost = docs._id
+        console.log('id of post==', idOfPost)
+        res.status(200).json(docs)
+    })
+        .catch(err=> res.status(401).json({
         message:'Something went wrong!'
     }))
+
+    setTimeout(()=> {
+        try{
+            console.log(idOfPost)
+            console.log('time is =================', req.body.lifeSpanforPost)
+            setTimeout(()=> {
+                Post.findById(idOfPost)
+                .then(post =>{
+                    console.log('post is==', post)
+                    post.remove().then(() =>{
+                        console.log('deleted')
+                        })
+                })
+            }, req.body.lifeSpanforPost)
+           
+        } catch (err){
+            console.log('cannot delete post')
+        }
+    }, 20000)
+
+    
+   
+
  })
 
 
